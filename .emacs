@@ -109,7 +109,7 @@
 
 (setq truncate-partial-width-windows nil)
 
-(when (eq window-system "mac")
+(when (eq window-system 'mac)
   ;; font
   ;; "-apple-migu 1m regular-medium-i-normal--0-0-0-0-m-0-mac-roman"
   (setq my-font "-*-*-medium-r-normal--12-*-*-*-*-*-fontset-hiramaru")
