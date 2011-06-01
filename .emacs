@@ -8,7 +8,9 @@
 
 (show-paren-mode t)
 (column-number-mode t)
-(tool-bar-mode 0)
+
+(if (boundp 'tool-bar-mode)
+    (tool-bar-mode 0))
 
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 
@@ -107,24 +109,25 @@
 
 (setq truncate-partial-width-windows nil)
 
-;; font
-;; "-apple-migu 1m regular-medium-i-normal--0-0-0-0-m-0-mac-roman"
-(setq my-font "-*-*-medium-r-normal--12-*-*-*-*-*-fontset-hiramaru")
-(setq mac-allow-anti-aliasing t)
-(if (= emacs-major-version 22)
-    (require 'carbon-font))
-(set-default-font my-font)
-(add-to-list 'default-frame-alist `(font . ,my-font))
-(when (= emacs-major-version 23)
-  (set-fontset-font
-   (frame-parameter nil 'font)
-   'japanese-jisx0208
-   '("Migu 1M" . "iso10646-1"))
-  (setq face-font-rescale-alist
-    '(("^-apple-migu 1m.*" . 1.2)
-      (".*osaka-bold.*" . 1.2)
-      (".*osaka-medium.*" . 1.2)
-      (".*courier-bold-.*-mac-roman" . 1.0)
-      (".*monaco cy-bold-.*-mac-cyrillic" . 0.9)
-      (".*monaco-bold-.*-mac-roman" . 0.9)
-      ("-cdac$" . 1.3))))
+(when (eq window-system "mac")
+  ;; font
+  ;; "-apple-migu 1m regular-medium-i-normal--0-0-0-0-m-0-mac-roman"
+  (setq my-font "-*-*-medium-r-normal--12-*-*-*-*-*-fontset-hiramaru")
+  (setq mac-allow-anti-aliasing t)
+  (if (= emacs-major-version 22)
+      (require 'carbon-font))
+  (set-default-font my-font)
+  (add-to-list 'default-frame-alist `(font . ,my-font))
+  (when (= emacs-major-version 23)
+    (set-fontset-font
+     (frame-parameter nil 'font)
+     'japanese-jisx0208
+     '("Migu 1M" . "iso10646-1"))
+    (setq face-font-rescale-alist
+          '(("^-apple-migu 1m.*" . 1.2)
+            (".*osaka-bold.*" . 1.2)
+            (".*osaka-medium.*" . 1.2)
+            (".*courier-bold-.*-mac-roman" . 1.0)
+            (".*monaco cy-bold-.*-mac-cyrillic" . 0.9)
+            (".*monaco-bold-.*-mac-roman" . 0.9)
+            ("-cdac$" . 1.3)))))
