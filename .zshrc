@@ -40,10 +40,16 @@ fi
 #if [ $TERM = "cygwin" ]; then 
 PROMPT='%{'$'\e[1;32m%}$USER@%m %{'$'\e[1;30m%} %~%{'$'\e[m%}\n%# '
 #PS1=$'%{\e]2; %~ \a'$'$fg[green]%~%{'$'\e[m%} \n%# '
+
+# foreground color
+local N=$[0x`hostname | md5sum | cut -b-8`%5]
+local COL=$'%{\e[0;$[32+N]m%}'
 local GREEN=$'%{\e[0;32m%}'
 local BLUE=$'%{\e[0;34m%}'
+local MAGENTA=$'%{\e[0;35m%}'
+local CYAN=$'%{\e[0;36m%}'
 local DEFAULT=$'%{\e[1;m%}'
-PS1=$GREEN$'$HOST:%~'$DEFAULT$'\n%# '
+PS1=$COL$'$HOST:%~'$DEFAULT$'\n%# '
 #RPROMPT='[%D{%H:%M on %a}]'
 
 #fi
@@ -81,4 +87,5 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig
 export INCLUDE_PATH=/opt/local/include:$INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$INCLUDE_PATH
 export LIBRARY_PATH=/opt/local/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
 export PATH=/opt/local/bin:$PATH
