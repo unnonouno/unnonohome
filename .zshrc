@@ -1,8 +1,10 @@
 bindkey -e
-
 autoload -U compinit; compinit -u
-
 autoload -U colors; colors
+
+# env
+EDITOR=vi
+PAGER=lv
 
 # history
 HISTFILE="$HOME/.zhistory"

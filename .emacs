@@ -11,6 +11,8 @@
 
 (if (boundp 'tool-bar-mode)
     (tool-bar-mode 0))
+(if (boundp 'menu-bar-mode)
+    (menu-bar-mode 0))
 
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 
@@ -54,7 +56,8 @@
 (setq frame-title-format (format "emacs@%s : %%f" (system-name)))
 
 ;;; hl line
-(global-hl-line-mode t)
+(global-hl-line-mode)
+(setq hl-line-face 'underline)
 
 ;;; ido
 (require 'ido)
