@@ -44,8 +44,8 @@ PROMPT='%{'$'\e[1;32m%}$USER@%m %{'$'\e[1;30m%} %~%{'$'\e[m%}\n%# '
 #PS1=$'%{\e]2; %~ \a'$'$fg[green]%~%{'$'\e[m%} \n%# '
 
 # foreground color
-local N=$[0x`hostname | md5sum | cut -b-8`%5]
-local COL=$'%{\e[0;$[32+N]m%}'
+local N=$[0x`hostname | md5sum | cut -b-7`%6]
+local COL=$'%{\e[0;$[31+N]m%}'
 local GREEN=$'%{\e[0;32m%}'
 local BLUE=$'%{\e[0;34m%}'
 local MAGENTA=$'%{\e[0;35m%}'

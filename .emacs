@@ -25,10 +25,12 @@
 (global-set-key "\C-x\C-r" 'revert-buffer)
 
 ;;; fullscreen
-(set-frame-parameter nil 'fullscreen 'fullboth)
-(defun fullscreen()
-  (interactive)
-  (set-frame-parameter nil 'fullscreen 'fullboth))
+(if (boundp 'set-frame-parameter)
+    (progn
+      (set-frame-parameter nil 'fullscreen 'fullboth)
+      (defun fullscreen()
+        (interactive)
+        (set-frame-parameter nil 'fullscreen 'fullboth))))
 
 ;;; redo
 ;;; http://www11.atwiki.jp/s-irie/pages/18.html
@@ -90,7 +92,7 @@
         (local-file  (file-relative-name
                       temp-file
                       (file-name-directory buffer-file-name))))
-   (list "g++" (list "-pipe" "-I." "-I/usr/local/include" "-I/opt/local/include" "-Wall" "-fsyntax-only" local-file))))
+   (list "g++" (list "-pipe" "-I" "." "-I" "/usr/local/include" "-I" "/opt/local/include" "-Wall" "-fsyntax-only" local-file))))
 (push '("\\.cpp$" flymake-cc-init) flymake-allowed-file-name-masks)
 (push '("\\.hpp$" flymake-cc-init) flymake-allowed-file-name-masks)
 (add-hook 'c++-mode-hook
