@@ -80,14 +80,14 @@ alias -g N='| nkf -s'
 alias -g C=' | /usr/local/bin/clip '
 alias -g P=' < /dev/clipboard '
 
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig
-
-#eval `dircolors -b ~/.dir_colors`
-
+export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig
 
 # for c/c++
-export INCLUDE_PATH=/opt/local/include:$INCLUDE_PATH
+export INCLUDE_PATH=$HOME/include:/usr/local/include:/opt/local/include:$INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$INCLUDE_PATH
-export LIBRARY_PATH=/opt/local/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
-export PATH=/opt/local/bin:$PATH
+export LIBRARY_PATH=$HOME/lib:/usr/local/lib:/opt/local/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
+
+# for gtest
+export GTEST_COLOR=yes
