@@ -100,7 +100,7 @@
             (flymake-mode t)))
 
 (add-hook 'c++-mode-hook '(lambda ()
-   (define-key c++-mode-map "\C-c\C-c"
+   (define-key c++-mode-map "\C-cd"
      'flymake-display-err-menu-for-current-line)))
 
 
@@ -113,6 +113,9 @@
 (setq-default physical-line-mode t)
 
 (setq truncate-partial-width-windows nil)
+
+;; cscope
+;(require 'xcscope)
 
 (when (eq window-system 'mac)
   ;; font
