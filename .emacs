@@ -25,12 +25,12 @@
 (global-set-key "\C-x\C-r" 'revert-buffer)
 
 ;;; fullscreen
-(if (boundp 'set-frame-parameter)
+;(if (boundp 'set-frame-parameter)
     (progn
       (set-frame-parameter nil 'fullscreen 'fullboth)
       (defun fullscreen()
         (interactive)
-        (set-frame-parameter nil 'fullscreen 'fullboth))))
+        (set-frame-parameter nil 'fullscreen 'fullboth)));)
 
 ;;; redo
 ;;; http://www11.atwiki.jp/s-irie/pages/18.html
@@ -49,7 +49,7 @@
   (font-lock-add-keywords
    major-mode
    '(("\t" 0 my-face-b-2 append)
-     ("　" 0 myface-b-1 append)
+     ("　" 0 my-face-b-1 append)
      )))
 (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
 (ad-activate 'font-lock-mode)
@@ -107,6 +107,18 @@
 (custom-set-faces '(flymake-errline ((((class color)) (:bold t :underline t :background "firebrick"))))
                  '(flymake-warnline ((((class color)) (:underline t)))))
 
+;; rst-mode
+(setq rst-mode-lazy nil)
+(autoload 'rst-mode "rst-mode" "mode for editing reStructuredText documents" t)
+(setq auto-mode-alist
+      (append '(("\\.rst$" . rst-mode)
+                ("\\.rest$" . rst-mode)) auto-mode-alist))
+
+;; tuareg-mode
+(setq auto-mode-alist
+  (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
+(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code." t)
+(autoload 'camldebug "cameldeb" "Run the Caml debugger." t)
 
 ;; physical-line-mode
 (load "physical-line")

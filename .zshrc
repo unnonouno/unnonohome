@@ -80,7 +80,10 @@ alias -g N='| nkf -s'
 alias -g C=' | /usr/local/bin/clip '
 alias -g P=' < /dev/clipboard '
 
-export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig
+export GREP_COLORS=auto
+
+export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig:/usr/lib/pkgconfig
+export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
 
 # for c/c++
 export INCLUDE_PATH=$HOME/include:/usr/local/include:/opt/local/include:$INCLUDE_PATH
