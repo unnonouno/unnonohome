@@ -129,6 +129,33 @@
 ;; cscope
 ;(require 'xcscope)
 
+;; for c/c++
+(defun replace-regex-case-ignore (pat replace str)
+  (let ((def-case case-fold-search))
+    (setq case-fold-search nil)
+    (let ((res replace-regexp-in-string pat replace str))
+      (setq case-fold-search def-case)
+      res)))
+(defun make-capital-var (s)
+  (setq case-fold-search nil)
+  (concat
+   (upcase
+    (replace-regexp-case-ignore
+     "[_\\.]" "_" 
+     (replace-regexp-case-ignore "\\([a-z]\\)\\([A-Z]\\)" "\\1_\\2" s)))
+   "_"))
+(defun insert-include (f)
+  (interactive "b")
+  (let ((var (make-capital-var f)))
+    (save-excursion
+      (beginning-of-buffer)
+      (insert (concat "#ifndef " var "\n"))
+      (insert (concat "#define " var "\n")))
+    (save-excursion
+      (end-of-buffer)
+      (insert (concat "#endif // " var "\n")))))
+
+
 (when (eq window-system 'mac)
   ;; font
   ;; "-apple-migu 1m regular-medium-i-normal--0-0-0-0-m-0-mac-roman"
