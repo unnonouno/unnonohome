@@ -85,6 +85,7 @@ alias -g P=' < /dev/clipboard '
 #  bold and red
 export GREP_COLOR='01;31'
 export GREP_OPTIONS='--color=auto'
+alias grepc='grep --color=always'
 
 export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig:/usr/lib/pkgconfig
 export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
