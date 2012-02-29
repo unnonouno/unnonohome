@@ -80,7 +80,11 @@ alias -g N='| nkf -s'
 alias -g C=' | /usr/local/bin/clip '
 alias -g P=' < /dev/clipboard '
 
-export GREP_COLORS=auto
+
+# grep
+#  bold and red
+export GREP_COLOR='01;31'
+export GREP_OPTIONS='--color=auto'
 
 export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig:/usr/lib/pkgconfig
 export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
