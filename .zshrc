@@ -93,7 +93,7 @@ export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
 export INCLUDE_PATH=$HOME/include:/usr/local/include:/opt/local/include:$INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$INCLUDE_PATH
 export LIBRARY_PATH=$HOME/lib:/usr/local/lib:/opt/local/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$HOME/lib:/usr/local/lib:/opt/local/lib:$LD_LIBRARY_PATH
 export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
 
 # for gtest
