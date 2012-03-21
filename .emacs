@@ -66,6 +66,12 @@
 (ido-mode t)
 (add-hook 'ido-define-mode-map-hook
           (lambda() (define-key map " " 'ido-complete)))
+;; disable auto searching for files unless called explicitly
+(setq ido-auto-merge-delay-time 99999)
+(define-key ido-file-dir-completion-map (kbd "C-c C-s") 
+  (lambda() 
+    (interactive)
+    (ido-initiate-auto-merge (current-buffer))))
 
 ;;; yatex
 (setq load-path (cons "/usr/local/lib/mule/site-lisp/yatex" load-path))
@@ -130,10 +136,10 @@
 ;(require 'xcscope)
 
 ;; for c/c++
-(defun replace-regex-case-ignore (pat replace str)
+(defun replace-regexp-case-ignore (pat replace str)
   (let ((def-case case-fold-search))
     (setq case-fold-search nil)
-    (let ((res replace-regexp-in-string pat replace str))
+    (let ((res (replace-regexp-in-string pat replace str)))
       (setq case-fold-search def-case)
       res)))
 (defun make-capital-var (s)
@@ -154,7 +160,7 @@
     (save-excursion
       (end-of-buffer)
       (insert (concat "#endif // " var "\n")))))
-
+  
 
 (when (eq window-system 'mac)
   ;; font
