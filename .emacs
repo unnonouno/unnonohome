@@ -114,11 +114,12 @@
                  '(flymake-warnline ((((class color)) (:underline t)))))
 
 ;; rst-mode
-(setq rst-mode-lazy nil)
-(autoload 'rst-mode "rst-mode" "mode for editing reStructuredText documents" t)
+(require 'rst)
 (setq auto-mode-alist
       (append '(("\\.rst$" . rst-mode)
-                ("\\.rest$" . rst-mode)) auto-mode-alist))
+		("\\.rest$" . rst-mode)) auto-mode-alist))
+;(setq frame-background-mode 'dark)
+(add-hook 'rst-mode-hook '(lambda() (setq indent-tabs-mode nil)))
 
 ;; tuareg-mode
 (setq auto-mode-alist
@@ -151,7 +152,7 @@
      (replace-regexp-case-ignore "\\([a-z]\\)\\([A-Z]\\)" "\\1_\\2" s)))
    "_"))
 (defun insert-include (f)
-  (interactive "b")
+  (interactive "B")
   (let ((var (make-capital-var f)))
     (save-excursion
       (beginning-of-buffer)
