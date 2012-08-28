@@ -4,7 +4,7 @@ autoload -U colors; colors
 
 # env
 EDITOR=vi
-PAGER=lv
+PAGER='lv -c'
 
 # history
 HISTFILE="$HOME/.zhistory"
@@ -79,6 +79,8 @@ alias -g N='| nkf -s'
 
 alias -g C=' | /usr/local/bin/clip '
 alias -g P=' < /dev/clipboard '
+
+alias clean='rm *~'
 
 
 # grep
