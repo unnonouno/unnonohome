@@ -32,11 +32,11 @@ setopt ignore_eof
 if [ `uname` = Darwin ]; then
   alias ls="ls -G"
   alias la="ls -aG"
-  alias ll="ls -alG"
+  alias ll="ls -alhG"
 else
   alias ls="ls --color"
   alias la="ls -a --color"
-  alias ll="ls -al --color"
+  alias ll="ls -alh --color"
 fi
 
 #if [ $TERM = "cygwin" ]; then 
