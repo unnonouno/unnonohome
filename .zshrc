@@ -101,3 +101,9 @@ export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
 
 # for gtest
 export GTEST_COLOR=yes
+
+# for godi
+if [ -d $HOME/godi ]; then
+    export PATH=$HOME/godi/bin:$HOME/godi/sbin:$PATH
+    export MANPATH=$HOME/godi/man:$MANPATH
+fi
