@@ -89,15 +89,15 @@ export GREP_COLOR='01;31'
 export GREP_OPTIONS='--color=auto'
 alias grepc='grep --color=always'
 
-export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig:/usr/lib/pkgconfig
-export PATH=$HOME/bin:$HOME/Library/Haskell/bin:/usr/texbin:/usr/local/bin:/opt/local/bin:$PATH
+export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
+export PATH=$HOME/bin:$HOME/Library/Haskell/bin:/usr/texbin:/usr/local/bin:$PATH
 
 # for c/c++
-export INCLUDE_PATH=$HOME/include:/usr/local/include:/opt/local/include:$INCLUDE_PATH
+export INCLUDE_PATH=$HOME/include:/usr/local/include:$INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$INCLUDE_PATH
-export LIBRARY_PATH=$HOME/lib:/usr/local/lib:/opt/local/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$HOME/lib:/usr/local/lib:/opt/local/lib:$LD_LIBRARY_PATH
-export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
+export LIBRARY_PATH=$HOME/lib:/usr/local/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$HOME/lib:/usr/local/lib:$LD_LIBRARY_PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # for gtest
 export GTEST_COLOR=yes
