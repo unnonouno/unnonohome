@@ -1,4 +1,4 @@
 hardstatus alwayslastline "%H %-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%< %= [%l] %Y/%m/%d %c"
 #autodetach
-escape ^z^z
+escape ^t^t
 shell zsh
