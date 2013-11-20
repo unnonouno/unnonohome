@@ -175,8 +175,11 @@
      (replace-regexp-case-ignore "\\([a-z]\\)\\([A-Z]\\)" "\\1_\\2" s)))
    "_"))
 (defun insert-include (f)
-  (interactive "B")
-  (let ((var (make-capital-var f)))
+  (interactive "b")
+  (let* ((uuid (shell-command-to-string "uuidgen"))
+         (no_new_line (replace-regexp-in-string "\n" "" uuid))
+         (id (replace-regexp-in-string "-" "_" no_new_line))
+         (var (make-capital-var (concat f "_" id))))
     (save-excursion
       (beginning-of-buffer)
       (insert (concat "#ifndef " var "\n"))
