@@ -140,6 +140,10 @@
 ;(setq frame-background-mode 'dark)
 (add-hook 'rst-mode-hook '(lambda() (setq indent-tabs-mode nil)))
 
+;; markdown-mode
+(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
+(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
+
 ;; tuareg-mode
 (setq auto-mode-alist
   (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
