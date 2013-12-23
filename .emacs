@@ -109,6 +109,10 @@
 (setq auto-mode-alist
       (cons (cons "wscript" 'python-mode) auto-mode-alist))
 
+;;; ruby-mode for gemspec
+(setq auto-mode-alist
+      (cons (cons "\\.gemspec$" 'ruby-mode) auto-mode-alist))
+
 ;;; fly-make
 (require 'flymake)
 (defun flymake-cc-init ()
