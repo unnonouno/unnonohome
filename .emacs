@@ -85,6 +85,25 @@
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 
+;;; c++ 80 cheracter constraint
+(add-hook 'c-mode-hook
+  (lambda ()
+    (font-lock-add-keywords nil
+      '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
+(add-hook 'c++-mode-hook
+  (lambda ()
+    (font-lock-add-keywords nil
+      '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
+(add-hook 'python-mode-hook
+  (lambda ()
+    (font-lock-add-keywords nil
+      '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
+
+;;; java 80 cheracter constraint
+(add-hook 'java-mode-hook
+  (lambda ()
+    (font-lock-add-keywords nil
+      '(("^[^\n]\\{100\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
 
 ;;; python-mode for waf
 (setq auto-mode-alist
@@ -121,6 +140,10 @@
 ;(setq frame-background-mode 'dark)
 (add-hook 'rst-mode-hook '(lambda() (setq indent-tabs-mode nil)))
 
+;; markdown-mode
+(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
+(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
+
 ;; tuareg-mode
 (setq auto-mode-alist
   (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
@@ -152,8 +175,11 @@
      (replace-regexp-case-ignore "\\([a-z]\\)\\([A-Z]\\)" "\\1_\\2" s)))
    "_"))
 (defun insert-include (f)
-  (interactive "B")
-  (let ((var (make-capital-var f)))
+  (interactive "b")
+  (let* ((uuid (shell-command-to-string "uuidgen"))
+         (no_new_line (replace-regexp-in-string "\n" "" uuid))
+         (id (replace-regexp-in-string "-" "_" no_new_line))
+         (var (make-capital-var (concat f "_" id))))
     (save-excursion
       (beginning-of-buffer)
       (insert (concat "#ifndef " var "\n"))

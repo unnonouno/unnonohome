@@ -1,9 +1,9 @@
-;;; redo+.el -- Redo/undo system for Emacs
+;;; redo+.el --- Redo/undo system for Emacs
 
 ;; Copyright (C) 1985, 1986, 1987, 1993-1995 Free Software Foundation, Inc.
 ;; Copyright (C) 1995 Tinker Systems and INS Engineering Corp.
 ;; Copyright (C) 1997 Kyle E. Jones
-;; Copyright (C) 2008 S. Irie
+;; Copyright (C) 2008, 2009, 2013 S. Irie
 
 ;; Author: Kyle E. Jones, February 1997
 ;;         S. Irie, March 2008
@@ -66,12 +66,35 @@
 
 
 ;; History:
+;; 2013-11-17  S. Irie
+;;         * Fix the time entry not properly generated on Emacs 24
+;;         * Use `user-error' if available
+;;         * Version 1.19
+;;
+;; 2013-10-19  S. Irie
+;;         * Fix package.el/MELPA issue ("---" in the first line required)
+;;         * Version 1.18
+;;
+;; 2013-10-12  S. Irie
+;;         * Fix errors that occur on Emacs 22/24
+;;           (The fix in 1.16 was incorrect.  It actually did nothing.)
+;;         * Version 1.17
+;;
+;; 2013-04-23  HenryVIII
+;;         * Fix for GNU bug report #12581
+;;         * Version 1.16
+;;
+;; 2009-01-07  S. Irie
+;;         * Delete unnecessary messages
+;;         * Bug fix
+;;         * Version 1.15
+;;
 ;; 2008-05-23  S. Irie
 ;;         * Bug fix
 ;;         * Version 1.14
 ;;
 ;; 2008-05-11  S. Irie
-;;         * record unmodified status entry when redoing
+;;         * Record unmodified status entry when redoing
 ;;         * Version 1.13
 ;;
 ;; 2008-05-10  S. Irie
@@ -94,7 +117,7 @@
 
 ;;; Code:
 
-(defvar redo-version "1.14"
+(defvar redo-version "1.19"
   "Version number for the Redo+ package.")
 
 (defvar last-buffer-undo-list nil
@@ -104,10 +127,16 @@
 (make-variable-buffer-local 'pending-undo-list)
 
 ;; Emacs 20 variable
-;(defvar undo-in-progress) ;; Emacs 20 is no longer supported.
+;;(defvar undo-in-progress) ; Emacs 20 is no longer supported.
 
 ;; Emacs 21 variable
 (defvar undo-no-redo nil)
+
+(defun redo-error (format &rest args)
+  "Call `user-error' if available.  Otherwise, use `error' instead."
+  (if (fboundp 'user-error)
+      (apply 'user-error format args)
+    (apply 'error format args)))
 
 (defun redo (&optional count)
   "Redo the the most recent undo.
@@ -116,9 +145,9 @@ If you have modified the buffer since the last redo or undo,
 then you cannot redo any undos before then."
   (interactive "*p")
   (if (eq buffer-undo-list t)
-      (error "No undo information in this buffer"))
+      (redo-error "No undo information in this buffer"))
   (if (eq last-buffer-undo-list nil)
-      (error "No undos to redo"))
+      (redo-error "No undos to redo"))
   (or (eq last-buffer-undo-list buffer-undo-list)
       ;; skip one undo boundary and all point setting commands up
       ;; until the next undo boundary and try again.
@@ -127,11 +156,13 @@ then you cannot redo any undos before then."
 	(while (and p (integerp (car-safe p)))
 	  (setq p (cdr-safe p)))
 	(eq last-buffer-undo-list p))
-      (error "Buffer modified since last undo/redo, cannot redo"))
+      (redo-error "Buffer modified since last undo/redo, cannot redo"))
   (and (eq (cdr buffer-undo-list) pending-undo-list)
-       (error "No further undos to redo in this buffer"))
-  (or (eq (selected-window) (minibuffer-window))
-      (message "Redo..."))
+       (redo-error "No further undos to redo in this buffer"))
+  ;; This message seems to be unnecessary because the echo area
+  ;; is rewritten before the screen is updated.
+  ;;(or (eq (selected-window) (minibuffer-window))
+  ;;    (message "Redo..."))
   (let ((modified (buffer-modified-p))
 	(undo-in-progress t)
 	(recent-save (recent-auto-save-p))
@@ -157,7 +188,9 @@ then you cannot redo any undos before then."
 	     ;; this information only in redo entries.
 	     (when (and (not modified) (buffer-file-name))
 	       (let* ((time (nth 5 (file-attributes (buffer-file-name))))
-		      (elt (cons (car time) (cadr time))))
+		      (elt (if (cddr time) ;; non-nil means length > 2
+			       time                           ;; Emacs 24
+			     (cons (car time) (cadr time))))) ;; Emacs 21-23
 		 (if (eq (car-safe (car prev)) t)
 		     (setcdr (car prev) elt)
 		   (setcdr prev (cons (cons t elt) p)))))
@@ -202,8 +235,10 @@ A numeric argument serves as a repeat count."
   (interactive "*p")
   (let ((modified (buffer-modified-p))
 	(recent-save (recent-auto-save-p)))
-    (or (eq (selected-window) (minibuffer-window))
-	(message "Undo..."))
+    ;; This message seems to be unnecessary because the echo area
+    ;; is rewritten before the screen is updated.
+    ;;(or (eq (selected-window) (minibuffer-window))
+    ;;    (message "Undo..."))
     (let ((p buffer-undo-list)
 	  (old-pending-undo-list pending-undo-list))
       (or (eq last-buffer-undo-list buffer-undo-list)
@@ -253,14 +288,17 @@ A numeric argument serves as a repeat count."
 (unless (featurep 'xemacs)
   ;; condition to undo
   (mapc (lambda (map)
-	  (setcar (cdr (memq :enable (assq 'undo (cdr map))))
-		  '(and (not buffer-read-only)
-			(consp buffer-undo-list)
-			(or (not (or (eq last-buffer-undo-list
-					 buffer-undo-list)
-				     (eq last-buffer-undo-list
-					 (cdr buffer-undo-list))))
-			    (listp pending-undo-list)))))
+	  (let* ((p (assq 'undo (cdr map)))
+		 (l (memq :enable (setcdr p (copy-sequence (cdr p))))))
+	    (when l
+	      (setcar (cdr l)
+		      '(and (not buffer-read-only)
+			    (consp buffer-undo-list)
+			    (or (not (or (eq last-buffer-undo-list
+					     buffer-undo-list)
+					 (eq last-buffer-undo-list
+					     (cdr buffer-undo-list))))
+				(listp pending-undo-list)))))))
 	(append (list menu-bar-edit-menu)
 		(if window-system (list tool-bar-map))))
   ;; redo's menu-bar entry
@@ -300,4 +338,4 @@ A numeric argument serves as a repeat count."
 
 (provide 'redo+)
 
-;;; redo.el ends here
+;;; redo+.el ends here
