@@ -192,6 +192,19 @@
       (end-of-buffer)
       (insert (concat "#endif // " var "\n")))))
 
+(defun insert-namespace (n)
+  (interactive "s")
+  (let* ((namespace (concat "namespace " n)))
+       (insert (concat namespace " {\n"))
+       (insert (concat "}  // " namespace "\n"))))
+
+(add-hook
+ 'c++-mode-hook
+ (lambda ()
+   (local-set-key (kbd "C-c C-i") 'insert-include)
+   (local-set-key (kbd "C-c C-n") 'insert-namespace)))
+
+
 ;; global
 (autoload 'gtags-mode "gtags" "" t)
 (setq gtags-mode-hook
