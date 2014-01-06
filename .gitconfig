@@ -1,0 +1,11 @@
+[user]
+	name = Yuya Unno
+	email = unnonouno@gmail.com
+[color]
+	ui = auto
+[core]
+	pager = lv -c
+	editor = vim -c \"set fenc=utf-8\"
+[github]
+        user = unnonouno
+
