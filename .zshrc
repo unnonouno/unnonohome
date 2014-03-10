@@ -118,3 +118,16 @@ if [ -d $HOME/.opam ]; then
   . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 fi
 
+# rbenv
+if [ -d $HOME/.rbenv ]; then
+    export RBENV_ROOT=$HOME/.rbenv
+    export PATH=$RBENV_ROOT/bin:${PATH}
+    eval "$(rbenv init -)"
+fi
+
+# pyenv
+if [ -d $HOME/.pyenv ]; then
+    export PYENV_ROOT=$HOME/.pyenv
+    export PATH=$PYENV_ROOT/bin:${PATH}
+    eval "$(pyenv init -)"
+fi
