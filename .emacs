@@ -190,7 +190,7 @@
       (insert (concat "#define " var "\n")))
     (save-excursion
       (end-of-buffer)
-      (insert (concat "#endif // " var "\n")))))
+      (insert (concat "#endif  // " var "\n")))))
 
 (defun insert-namespace (n)
   (interactive "s")
