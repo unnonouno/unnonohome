@@ -96,9 +96,14 @@ export PATH=$HOME/bin:$HOME/Library/Haskell/bin:/usr/texbin:/usr/local/bin:$PATH
 export INCLUDE_PATH=$HOME/include:/usr/local/include:$INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$INCLUDE_PATH
 export C_INCLUDE_PATH=$INCLUDE_PATH
+if [ -d /opt/local/lib ]; then
+    export LIBRARY_PATH=/opt/local/lib:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=/opt/local/lib:$LD_LIBRARY_PATH
+fi
 export LIBRARY_PATH=$HOME/lib:/usr/local/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$HOME/lib:/usr/local/lib:$LD_LIBRARY_PATH
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
 
 # for gtest
 export GTEST_COLOR=yes
