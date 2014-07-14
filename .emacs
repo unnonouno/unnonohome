@@ -115,28 +115,10 @@
 (setq auto-mode-alist
       (cons (cons "\\.gemspec$" 'ruby-mode) auto-mode-alist))
 
-;;; fly-make
-(require 'flymake)
-(defun flymake-cc-init ()
- (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                      'flymake-create-temp-inplace))
-        (local-file  (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-   (list "g++" (list "-pipe" "-I" "." "-I" "/usr/local/include" "-I" "/opt/local/include" "-Wall" "-fsyntax-only" local-file))))
-(push '("\\.cpp$" flymake-cc-init) flymake-allowed-file-name-masks)
-(push '("\\.hpp$" flymake-cc-init) flymake-allowed-file-name-masks)
-(add-hook 'c++-mode-hook
-         '(lambda ()
-            (flymake-mode t)))
-
-(add-hook 'c++-mode-hook '(lambda ()
-   (define-key c++-mode-map "\C-cd"
-     'flymake-display-err-menu-for-current-line)))
-
-
-(custom-set-faces '(flymake-errline ((((class color)) (:bold t :underline t :background "firebrick"))))
-                 '(flymake-warnline ((((class color)) (:underline t)))))
+;;; flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(global-set-key "\C-cn" 'flycheck-next-error)
+(global-set-key "\C-cp" 'flycheck-previous-error)
 
 ;; rst-mode
 (require 'rst)
