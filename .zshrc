@@ -109,11 +109,6 @@ if [ -d $HOME/godi ]; then
     export MANPATH=$HOME/godi/man:$MANPATH
 fi
 
-# for rvm
-if [ -d $HOME/.rvm ]; then
-  source $HOME/.rvm/scripts/rvm
-fi
-
 # OPAM configuration
 if [ -d $HOME/.opam ]; then
   . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
