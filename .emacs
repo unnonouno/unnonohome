@@ -174,9 +174,11 @@
 
 (defun insert-namespace (n)
   (interactive "s")
-  (let* ((namespace (concat "namespace " n)))
-       (insert (concat namespace " {\n"))
-       (insert (concat "}  // " namespace "\n"))))
+  (if (eq n "")
+      (insert "namespace {\n}  // namespace\n")
+    (let* ((namespace (concat "namespace " n)))
+      (insert (concat namespace " {\n"))
+      (insert (concat "}  // " namespace "\n")))))
 
 (add-hook
  'c++-mode-hook
