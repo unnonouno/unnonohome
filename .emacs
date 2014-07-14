@@ -11,9 +11,9 @@
 (show-paren-mode t)
 (column-number-mode t)
 
-(if (boundp 'tool-bar-mode)
+(if window-system
     (tool-bar-mode 0))
-(if (boundp 'menu-bar-mode)
+(if window-system
     (menu-bar-mode 0))
 
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
