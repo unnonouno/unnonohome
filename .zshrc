@@ -127,3 +127,8 @@ if [ -d $HOME/.pyenv ]; then
     export PATH=$PYENV_ROOT/bin:${PATH}
     eval "$(pyenv init -)"
 fi
+
+# GO
+export GOROOT=$HOME/go
+export GOPATH=$HOME/dev/go
+export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
