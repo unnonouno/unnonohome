@@ -186,22 +186,6 @@
    (local-set-key (kbd "C-c C-i") 'insert-include)
    (local-set-key (kbd "C-c C-n") 'insert-namespace)))
 
-
-;; global
-(autoload 'gtags-mode "gtags" "" t)
-(setq gtags-mode-hook
-      '(lambda ()
-         (local-set-key "\M-t" 'gtags-find-tag)
-         (local-set-key "\M-r" 'gtags-find-rtag)
-         (local-set-key "\M-s" 'gtags-find-symbol)
-         (local-set-key "\C-t" 'gtags-pop-stack)
-         ))
-(add-hook 'c-mode-common-hook
-          '(lambda()
-             (gtags-mode 1)
-             (gtags-make-complete-list)
-             ))
-
 (when (eq window-system 'mac)
   ;; font
   ;; "-apple-migu 1m regular-medium-i-normal--0-0-0-0-m-0-mac-roman"
