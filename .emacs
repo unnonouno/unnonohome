@@ -1,4 +1,6 @@
-(setq load-path (cons "~/site-lisp" load-path))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+(require 'cask "~/.cask/cask.el")
+(cask-initialize)
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
@@ -74,12 +76,12 @@
     (ido-initiate-auto-merge (current-buffer))))
 
 ;;; yatex
-(setq load-path (cons "/usr/local/lib/mule/site-lisp/yatex" load-path))
-
 (setq auto-mode-alist
       (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
 (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
 (setq YaTeX-kanji-code 4)
+(add-hook ' yatex-mode-hook
+            '(lambda () (auto-fill-mode -1)))
 
 ;;; google c/c++ style
 (require 'google-c-style)
@@ -153,10 +155,6 @@
   (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
 (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code." t)
 (autoload 'camldebug "cameldeb" "Run the Caml debugger." t)
-
-;; physical-line-mode
-(load "physical-line")
-(setq-default physical-line-mode t)
 
 (setq truncate-partial-width-windows nil)
 
@@ -242,3 +240,8 @@
             (".*monaco cy-bold-.*-mac-cyrillic" . 0.9)
             (".*monaco-bold-.*-mac-roman" . 0.9)
             ("-cdac$" . 1.3)))))
+
+(add-hook 'go-mode-hook
+          '(lambda()
+             (setq tab-width 2)))
+
