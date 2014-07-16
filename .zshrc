@@ -139,6 +139,6 @@ export GOPATH=$HOME/dev/go
 export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 # cask
-if [ -d $HOME/.cask]; then
+if [ -d $HOME/.cask ]; then
     export PATH=$HOME/.cask/bin:${PATH}
 fi
