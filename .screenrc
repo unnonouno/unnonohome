@@ -2,3 +2,5 @@ hardstatus alwayslastline "%H %-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%< %= [%l] %Y/%m/%d
 #autodetach
 escape ^t^t
 shell zsh
+defencoding utf8
+cjkwidth on
