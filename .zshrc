@@ -13,7 +13,6 @@ SAVEHIST=10000
 
 # option, limit, bindkey
 setopt hist_ignore_all_dups
-setopt hist_reduce_blanks
 setopt share_history
 
 autoload -U history-search-end
