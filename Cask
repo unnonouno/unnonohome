@@ -20,3 +20,4 @@
 (depends-on "ruby-mode")
 (depends-on "ruby-block")
 (depends-on "web-mode")
+(depends-on "protobuf-mode")
