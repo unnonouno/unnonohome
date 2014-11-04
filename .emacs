@@ -188,6 +188,8 @@
    (local-set-key (kbd "C-c C-i") 'insert-include)
    (local-set-key (kbd "C-c C-n") 'insert-namespace)))
 
+(require 'protobuf-mode)
+
 (when (eq window-system 'mac)
   ;; font
   ;; "-apple-migu 1m regular-medium-i-normal--0-0-0-0-m-0-mac-roman"
