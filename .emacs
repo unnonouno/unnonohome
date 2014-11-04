@@ -1,4 +1,6 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
+(add-to-list 'exec-path (expand-file-name "~/go/bin"))
+
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 
@@ -212,4 +214,4 @@
 (add-hook 'go-mode-hook
           '(lambda()
              (setq tab-width 2)))
-
+(add-hook 'before-save-hook 'gofmt-before-save)
