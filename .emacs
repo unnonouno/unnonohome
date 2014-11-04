@@ -217,3 +217,11 @@
           '(lambda()
              (setq tab-width 2)))
 (add-hook 'before-save-hook 'gofmt-before-save)
+
+(when (and
+       (eq window-system 'ns)
+       (= emacs-major-version 24))
+;  (set-fontset-font nil 'japanese-jisx0208 (font-spec :family "Migu 1M" :size 14))
+;  (set-fontset-font nil 'ascii (font-spec :family "Menlo" :size 11)))
+  (set-face-attribute 'default nil :family "Migu 1M" :height 140)
+  (set-fontset-font "fontset-default" 'japanese-jisx0208 '("Migu 1M" . "iso10646-*")))
