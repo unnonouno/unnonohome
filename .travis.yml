@@ -17,5 +17,5 @@ before_install:
   - cask
 script:
   - cp Cask $HOME/.emacs.d/.
-  - cask exec $EMACS -script .emacs 
+  - cask exec $EMACS -script init.el
 
