@@ -81,6 +81,16 @@ alias -g P=' < /dev/clipboard '
 
 alias clean='rm *~'
 
+# lv
+if [ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
+  SRC_HIGHLIGHT=/usr/share/source-highlight/src-hilite-lesspipe.sh
+fi
+if [ -f /usr/local/bin/share/src-hilite-lesspipe.sh ]; then
+  SRC_HIGHLIGHT=/usr/local/bin/src-hilite-lesspipe.sh
+fi
+if [ $SRC_HIGHLIGHT ]; then
+  function lc() { if [ -f $1 ]; then $SRC_HIGHLIGHT $1 | lv -c; fi; }
+fi
 
 # grep
 #  bold and red
