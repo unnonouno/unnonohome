@@ -85,7 +85,7 @@ alias clean='rm *~'
 if [ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
   SRC_HIGHLIGHT=/usr/share/source-highlight/src-hilite-lesspipe.sh
 fi
-if [ -f /usr/local/bin/share/src-hilite-lesspipe.sh ]; then
+if [ -f /usr/local/bin/src-hilite-lesspipe.sh ]; then
   SRC_HIGHLIGHT=/usr/local/bin/src-hilite-lesspipe.sh
 fi
 if [ $SRC_HIGHLIGHT ]; then
