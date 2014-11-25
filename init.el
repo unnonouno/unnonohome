@@ -43,20 +43,15 @@
 (global-set-key "\C-_" 'redo) 
 
 ;;; show spaces
-(defface my-face-b-1 '((t (:background "medium blue"))) nil)
-(defface my-face-b-2 '((t (:underline "medium blue"))) nil)
-
-(defvar my-face-b-1 'my-face-b-1)
-(defvar my-face-b-2 'my-face-b-2)
-
-(defadvice font-lock-mode (before my-font-lock-mode())
-  (font-lock-add-keywords
-   major-mode
-   '(("\t" 0 my-face-b-2 append)
-     ("　" 0 my-face-b-1 append)
-     )))
-(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
-(ad-activate 'font-lock-mode)
+(global-whitespace-mode 1)
+(setq whitespace-space-regexp "\\(\u3000\\)")
+(setq whitespace-style '(face tabs tab-mark spaces space-mark))
+(setq whitespace-display-mappings ())
+(set-face-foreground 'whitespace-tab "blue")
+(set-face-underline  'whitespace-tab t)
+(set-face-foreground 'whitespace-space "yellow")
+(set-face-background 'whitespace-space "red")
+(set-face-underline  'whitespace-space t)
 
 ;;; title bar
 (setq frame-title-format (format "emacs@%s : %%f" (system-name)))
