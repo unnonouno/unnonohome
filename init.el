@@ -1,8 +1,35 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (add-to-list 'exec-path (expand-file-name "~/go/bin"))
 
-(require 'cask "~/.cask/cask.el")
-(cask-initialize)
+(when load-file-name
+  (setq user-emacs-directory (file-name-directory load-file-name)))
+
+(add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(el-get-bundle flycheck)
+(el-get-bundle flycheck-pos-tip)
+(el-get-bundle smex)
+(el-get-bundle redo+)
+(el-get-bundle google-c-style)
+
+(el-get-bundle go-mode)
+(el-get-bundle haskell-mode)
+(el-get-bundle json-mode)
+(el-get-bundle markdown-mode)
+(el-get-bundle tuareg)
+(el-get-bundle yaml-mode)
+(el-get-bundle ruby-mode)
+(el-get-bundle ruby-block)
+(el-get-bundle web-mode)
+(el-get-bundle protobuf-mode)
+;(el-get-bundle yatex)
+
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
