@@ -10,12 +10,6 @@ before_install:
   - sudo add-apt-repository -y ppa:cassou/emacs
   - sudo apt-get update -qq
   - sudo apt-get install -qq $EMACS
-  # Install Cask
-  - curl -fsSkL --max-time 10 --retry 10 --retry-delay 10
-        https://raw.github.com/cask/cask/master/go | python
-  - export PATH="$HOME/.cask/bin:$PATH"
-  - cask
 script:
-  - cp Cask $HOME/.emacs.d/.
-  - cask exec $EMACS -script init.el
+  - $EMACS -script init.el
 
