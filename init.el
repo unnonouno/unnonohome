@@ -28,7 +28,7 @@
 (el-get-bundle ruby-block)
 (el-get-bundle web-mode)
 (el-get-bundle protobuf-mode)
-;(el-get-bundle yatex)
+(el-get-bundle yatex)
 
 
 (global-set-key "\M-g" 'goto-line)
