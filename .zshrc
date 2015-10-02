@@ -150,6 +150,15 @@ export GOROOT=$HOME/go
 export GOPATH=$HOME/dev/go
 export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
+# CUDA
+if [ -d /usr/local/cuda ]; then
+    export CUDA_HOME=/usr/local/cuda
+fi
+if [ $CUDA_HOME ]; then
+  export PATH=${CUDA_HOME}/bin:$PATH
+  export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:$LD_LIBRARY_PATH
+fi
+
 # cask
 if [ -d $HOME/.cask ]; then
     export PATH=$HOME/.cask/bin:${PATH}
