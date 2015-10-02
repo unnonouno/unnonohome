@@ -92,6 +92,9 @@ if [ $SRC_HIGHLIGHT ]; then
   function lc() { if [ -f $1 ]; then $SRC_HIGHLIGHT $1 | lv -c; fi; }
 fi
 
+# jq
+function jql() { jq -C $* | lv -c }
+
 # grep
 #  bold and red
 export GREP_COLOR='01;31'
