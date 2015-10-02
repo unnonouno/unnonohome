@@ -159,7 +159,3 @@ if [ $CUDA_HOME ]; then
   export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:$LD_LIBRARY_PATH
 fi
 
-# cask
-if [ -d $HOME/.cask ]; then
-    export PATH=$HOME/.cask/bin:${PATH}
-fi
