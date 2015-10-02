@@ -159,3 +159,10 @@ if [ $CUDA_HOME ]; then
   export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:$LD_LIBRARY_PATH
 fi
 
+# torch
+TORCH_HOME=$HOME/torch/install
+if [ -d $TORCH_HOME ]; then
+  export PATH=$TORCH_HOME/bin:$PATH
+  export LD_LIBRARY_PATH=$TORCH_HOME/lib:$LD_LIBRARY_PATH
+  export DYLD_LIBRARY_PATH=$TORCH_HOME/lib:$DYLD_LIBRARY_PATH
+fi
