@@ -12,12 +12,12 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
+(el-get-bundle cython-mode)
 (el-get-bundle flycheck)
 (el-get-bundle flycheck-pos-tip)
 (el-get-bundle smex)
 (el-get-bundle redo+)
 (el-get-bundle google-c-style)
-
 (el-get-bundle go-mode)
 (el-get-bundle haskell-mode)
 (el-get-bundle json-mode)
