@@ -3,7 +3,7 @@ from fabric.api import cd, env, put, run, sudo, shell_env
 
 
 def install_pyenv():
-    sudo('apt-get install -yq git libbz2-dev libreadline-dev libssql-dev libsqlite-dev')
+    sudo('apt-get install -yq git libbz2-dev libreadline-dev libssl-dev libsqlite-dev')
     run('git clone https://github.com/yyuu/pyenv.git ~/.pyenv')
 
 
