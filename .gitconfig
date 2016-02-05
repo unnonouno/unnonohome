@@ -9,3 +9,5 @@
 [github]
         user = unnonouno
 
+[fetch]
+	prune = true
