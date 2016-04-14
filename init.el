@@ -29,7 +29,7 @@
 (el-get-bundle web-mode)
 (el-get-bundle protobuf-mode)
 (el-get-bundle yatex)
-
+(el-get-bundle flymake-python-pyflakes)
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
@@ -143,6 +143,8 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (global-set-key "\C-cn" 'flycheck-next-error)
 (global-set-key "\C-cp" 'flycheck-previous-error)
+
+;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 
 ;; rst-mode
 (require 'rst)
