@@ -12,7 +12,7 @@ def install_ubuntu():
 
 
 def install_dl():
-    sudo('apt-get install -yq gfortran libatras-dev libjpeg-dev liblapack-dev libpng-dev libopenblas')
+    sudo('apt-get install -yq gfortran libatlas-dev libjpeg-dev liblapack-dev libpng-dev libopenblas-dev')
 
 
 def install_dot():
