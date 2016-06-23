@@ -8,4 +8,4 @@ def install_pyenv():
 
 
 def install_ubuntu():
-    sudo('apt-get install -yq emacs gcc git lv mercurial texinfo tig tmux zsh')
+    sudo('apt-get install -yq emacs gcc git lv mercurial texinfo tig tmux zip zsh')
