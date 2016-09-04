@@ -30,6 +30,7 @@
 (el-get-bundle protobuf-mode)
 (el-get-bundle yatex)
 (el-get-bundle flymake-python-pyflakes)
+(el-get-bundle py-autopep8)
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
@@ -134,6 +135,14 @@
 ;;; python-mode for waf
 (setq auto-mode-alist
       (cons (cons "wscript" 'python-mode) auto-mode-alist))
+
+;;; py-autopep8
+(require 'py-autopep8)
+(define-key python-mode-map (kbd "C-c C-f") 'py-autopep8-buffer)
+(add-hook 'python-mode-hook
+          '(lambda()
+             (when (string-suffix-p ".py" (buffer-name))
+               (py-autopep8-enable-on-save))))
 
 ;;; ruby-mode for gemspec
 (setq auto-mode-alist
