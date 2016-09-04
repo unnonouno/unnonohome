@@ -16,7 +16,7 @@ def install_dl():
 
 
 def install_dot():
-    run('mkdir git')
+    run('mkdir -p git')
     with cd('git'):
         run('git clone https://github.com/unnonouno/unnonohome.git')
     run('ln -s git/unnonohome/.zshrc .')
