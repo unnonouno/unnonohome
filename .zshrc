@@ -180,3 +180,7 @@ if [ -d $MKL_HOME ]; then
   export LD_LIBRARY_PATH=$MKL_HOME/lib/intel64:$LD_LIBRARY_PATH
 fi
 
+# ccache
+if [ -d /usr/lib/ccache ]; then
+  export PATH=/usr/lib/ccache:$PATH
+fi
