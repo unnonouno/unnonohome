@@ -145,6 +145,13 @@ if [ -d $HOME/.pyenv ]; then
     eval "$(pyenv init -)"
 fi
 
+# cudnnenv
+if [ -d $HOME/.cudnn ]; then
+  export CFLAGS="-I$HOME/.cudnn/active/cuda/include $CFLAGS"
+  export LDFLAGS="-L$HOME/.cudnn/active/cuda/lib64 $LDFLAGS"
+  export LD_LIBRARY_PATH=$HOME/.cudnn/active/cuda/lib64:$LD_LIBRARY_PATH
+fi
+
 # GO
 export GOROOT=$HOME/go
 export GOPATH=$HOME/dev/go
