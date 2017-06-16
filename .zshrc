@@ -98,7 +98,7 @@ function jql() { jq -C $* | lv -c }
 # grep
 #  bold and red
 export GREP_COLOR='01;31'
-export GREP_OPTIONS='--color=auto -s'
+alias grep='grep --color=auto -s'
 alias grepc='grep --color=always'
 
 export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
