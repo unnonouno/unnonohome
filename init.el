@@ -138,12 +138,15 @@
 
 ;;; py-autopep8
 (require 'py-autopep8)
+(defun py-autopep8-ex ()
+  (when (and (executable-find "autopep8")
+             (string-suffix-p ".py" (buffer-name)))
+    (py-autopep8-enable-on-save)))
 (define-key python-mode-map (kbd "C-c C-f") 'py-autopep8-buffer)
-(add-hook 'python-mode-hook
-          '(lambda()
-             (when (and (executable-find "autopep8")
-                        (string-suffix-p ".py" (buffer-name)))
-               (py-autopep8-enable-on-save))))
+;(add-hook 'python-mode-hook 'py-autopep8-ex)
+(defun py-autopep8-disable ()
+  (interactive)
+  (remove-hook 'python-mode-hook 'py-autopep8-ex t))
 
 ;;; ruby-mode for gemspec
 (setq auto-mode-alist
