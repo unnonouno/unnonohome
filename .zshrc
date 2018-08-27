@@ -188,6 +188,11 @@ if [ -d /usr/lib/ccache ]; then
   export PATH=/usr/lib/ccache:$PATH
 fi
 
+# direnv
+if type direnv > /dev/null 2>&1; then
+    eval "$(direnv hook zsh)"
+fi
+
 # ssh-agent
 agent="$HOME/.ssh/agent"
 if [ -S "$SSH_AUTH_SOCK" ]; then
