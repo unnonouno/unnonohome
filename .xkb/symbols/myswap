@@ -1,0 +1,5 @@
+partial modifier_keys
+xkb_symbols "swapkeys" {
+  replace key <LCTL>  { [ Caps_Lock ] };
+  replace key <CAPS> { [ Control_L ] };
+};
