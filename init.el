@@ -1,5 +1,5 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
-(add-to-list 'exec-path (expand-file-name "~/go/bin"))
+; (add-to-list 'exec-path (expand-file-name "~/go/bin"))
 
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
@@ -103,12 +103,12 @@
     (ido-initiate-auto-merge (current-buffer))))
 
 ;;; yatex
-(setq auto-mode-alist
-      (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
-(autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
-(setq YaTeX-kanji-code 4)
-(add-hook ' yatex-mode-hook
-            '(lambda () (auto-fill-mode -1)))
+; (setq auto-mode-alist
+;       (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
+; (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
+; (setq YaTeX-kanji-code 4)
+; (add-hook ' yatex-mode-hook
+;             '(lambda () (auto-fill-mode -1)))
 
 ;;; google c/c++ style
 (require 'google-c-style)
