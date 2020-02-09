@@ -1,6 +1,7 @@
 bindkey -e
 autoload -U compinit; compinit -u
 autoload -U colors; colors
+autoload -U zargs
 
 # env
 EDITOR=vi
