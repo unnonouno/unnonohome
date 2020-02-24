@@ -157,9 +157,9 @@ if [ -d $HOME/.cudnn ]; then
 fi
 
 # GO
-export GOROOT=$HOME/go
-export GOPATH=$HOME/dev/go
-export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+# export GOROOT=$HOME/go
+# export GOPATH=$HOME/dev/go
+# export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 # CUDA
 if [ -d /usr/local/cuda ]; then
