@@ -45,7 +45,11 @@ PROMPT='%{'$'\e[1;32m%}$USER@%m %{'$'\e[1;30m%} %~%{'$'\e[m%}\n%# '
 
 # foreground color
 local N=$[0x`hostname | md5sum | cut -b-7`%6]
-local COL=$'%{\e[0;$[31+N]m%}'
+local R=$[0x`echo "$HOST"r | md5sum | cut -b-7`%128 + 128]
+local G=$[0x`echo "$HOST"g | md5sum | cut -b-7`%128 + 128]
+local B=$[0x`echo "$HOST"b | md5sum | cut -b-7`%128 + 128]
+#local COL=$'%{\e[0;$[31+N]m%}'
+local COL=$'%{\e[0;38;2;'$R';'$G';'$B'm%}'
 local GREEN=$'%{\e[0;32m%}'
 local BLUE=$'%{\e[0;34m%}'
 local MAGENTA=$'%{\e[0;35m%}'
