@@ -12,4 +12,6 @@
 [fetch]
 	prune = true
 [alias]
+	co = checkout
+	br = branch
 	delete-merged-branches = !git branch --merged | grep -v \\* | xargs -I % git branch -d %
