@@ -136,7 +136,8 @@
 
 ;;; python-mode for waf
 (setq auto-mode-alist
-      (cons (cons "wscript" 'python-mode) auto-mode-alist))
+      (append '(("wscript" . python-mode)
+                ("\\.pyi$" . python-mode)) auto-mode-alist))
 
 ;;; py-autopep8
 (require 'py-autopep8)
