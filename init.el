@@ -33,6 +33,7 @@
 ; (el-get-bundle yatex)
 (el-get-bundle flymake-python-pyflakes)
 (el-get-bundle py-autopep8)
+(el-get-bundle ido-vertical-mode)
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
@@ -93,6 +94,7 @@
 ;;; ido
 (require 'ido)
 (ido-mode t)
+(ido-vertical-mode t)
 (add-hook 'ido-define-mode-map-hook
           (lambda() (define-key map " " 'ido-complete)))
 ;; disable auto searching for files unless called explicitly
