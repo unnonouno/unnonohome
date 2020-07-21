@@ -15,3 +15,8 @@
 	co = checkout
 	br = branch
 	delete-merged-branches = !git branch --merged | grep -v \\* | xargs -I % git branch -d %
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
