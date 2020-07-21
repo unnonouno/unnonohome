@@ -95,6 +95,8 @@
 (require 'ido)
 (ido-mode t)
 (ido-vertical-mode t)
+(setq ido-vertical-define-keys 'C-n-and-C-p-only)
+(setq ido-vertical-show-count t)
 (add-hook 'ido-define-mode-map-hook
           (lambda() (define-key map " " 'ido-complete)))
 ;; disable auto searching for files unless called explicitly
