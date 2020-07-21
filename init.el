@@ -34,6 +34,7 @@
 (el-get-bundle flymake-python-pyflakes)
 (el-get-bundle py-autopep8)
 (el-get-bundle ido-vertical-mode)
+(el-get-bundle smex)
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
@@ -105,6 +106,13 @@
   (lambda() 
     (interactive)
     (ido-initiate-auto-merge (current-buffer))))
+
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;;; yatex
 ; (setq auto-mode-alist
