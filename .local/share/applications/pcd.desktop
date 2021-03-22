@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=PCD file
+Comment=PCD file
+Exec=Open3D %f
+Name=pcd
+MimeType=application/x-pcd
