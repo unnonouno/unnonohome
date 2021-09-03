@@ -35,6 +35,7 @@
 (el-get-bundle py-autopep8)
 (el-get-bundle ido-vertical-mode)
 (el-get-bundle smex)
+(el-get-bundle mozc)
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
@@ -241,6 +242,11 @@
    (local-set-key (kbd "C-c C-n") 'insert-namespace)))
 
 (require 'protobuf-mode)
+
+;(require 'mozc)
+;(set-language-environment "Japanese")
+;(setq default-input-method "japanese-mozc")
+(prefer-coding-system 'utf-8)
 
 (when (eq window-system 'mac)
   ;; font
