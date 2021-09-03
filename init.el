@@ -36,6 +36,7 @@
 (el-get-bundle ido-vertical-mode)
 (el-get-bundle smex)
 (el-get-bundle mozc)
+(el-get-bundle typescript-mode)
 
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-h" 'delete-backward-char)
