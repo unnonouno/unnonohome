@@ -35,6 +35,7 @@
 (el-get-bundle py-autopep8)
 (el-get-bundle ido-vertical-mode)
 (el-get-bundle smex)
+(el-get-bundle jedi)
 (el-get-bundle mozc)
 (el-get-bundle typescript-mode)
 
