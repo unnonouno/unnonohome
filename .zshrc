@@ -39,6 +39,10 @@ else
   alias ll="ls -alh --color"
 fi
 
+if [ `uname` = Linux ]; then
+    alias pbcopy="xsel --clipboard --input"
+fi
+
 #if [ $TERM = "cygwin" ]; then 
 PROMPT='%{'$'\e[1;32m%}$USER@%m %{'$'\e[1;30m%} %~%{'$'\e[m%}\n%# '
 #PS1=$'%{\e]2; %~ \a'$'$fg[green]%~%{'$'\e[m%} \n%# '
