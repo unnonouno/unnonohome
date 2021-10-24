@@ -166,6 +166,10 @@
   (interactive)
   (remove-hook 'python-mode-hook 'py-autopep8-ex t))
 
+;;; jedi
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
 ;;; ruby-mode for gemspec
 (setq auto-mode-alist
       (cons (cons "\\.gemspec$" 'ruby-mode) auto-mode-alist))
