@@ -47,6 +47,8 @@
 
 (show-paren-mode t)
 (column-number-mode t)
+(setq split-height-threshold nil)
+(setq split-width-threshold nil)
 
 (if window-system
     (tool-bar-mode 0))
