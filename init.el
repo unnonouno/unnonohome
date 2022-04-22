@@ -168,6 +168,12 @@
   (interactive)
   (remove-hook 'python-mode-hook 'py-autopep8-ex t))
 
+
+(add-hook 'js-mode-hook
+          (lambda ()
+            (make-local-variable 'js-indent-level)
+            (setq js-indent-level 2)))
+
 ;;; jedi
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
