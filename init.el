@@ -266,6 +266,9 @@
 (require 'typescript-mode)
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+(add-hook 'typescript-mode-hook
+  (lambda ()
+    (setq auto-save-default nil)))
 
 ;(require 'mozc)
 ;(set-language-environment "Japanese")
