@@ -269,6 +269,9 @@
 (add-hook 'typescript-mode-hook
   (lambda ()
     (setq auto-save-default nil)))
+(add-hook 'typescript-mode-hook
+   (lambda()
+     (setq typescript-indent-level 2)))
 
 ;(require 'mozc)
 ;(set-language-environment "Japanese")
