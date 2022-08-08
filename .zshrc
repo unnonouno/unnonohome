@@ -169,6 +169,11 @@ fi
 # export GOPATH=$HOME/dev/go
 # export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
+# Cargo
+if [ -d $HOME/.cargo/bin ]; then
+    export PATH=$HOME/.cargo/bin:$PATH
+fi
+
 # CUDA
 if [ -d /usr/local/cuda ]; then
     export CUDA_HOME=/usr/local/cuda
