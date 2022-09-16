@@ -41,6 +41,7 @@ fi
 
 if [ `uname` = Linux ]; then
     alias pbcopy="xsel --clipboard --input"
+    alias open="xdg-open"
 fi
 
 #if [ $TERM = "cygwin" ]; then 
