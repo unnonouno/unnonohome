@@ -225,3 +225,9 @@ fi
 if [ -s $HOME/.xkb/keymap/mykbd ]; then
   xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
 fi
+
+# anyenv
+if [ -s $HOME/.anyenv ]; then
+  export PATH="$HOME/.anyenv/bin:$PATH"
+  eval "$(anyenv init -)"
+fi
