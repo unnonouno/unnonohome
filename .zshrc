@@ -111,6 +111,8 @@ export GREP_COLORS='mt=01;31'
 alias grep='grep --color=auto -s'
 alias grepc='grep --color=always'
 
+alias dif='(){diff -y -W `tput cols` --color=always $* | lv -c}'
+
 export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
 export PATH=$HOME/bin:$HOME/Library/Haskell/bin:/usr/texbin:/usr/local/bin:$PATH
 
