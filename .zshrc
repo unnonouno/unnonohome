@@ -107,7 +107,7 @@ function jql() { jq -C $* | lv -c }
 
 # grep
 #  bold and red
-export GREP_COLOR='01;31'
+export GREP_COLORS='mt=01;31'
 alias grep='grep --color=auto -s'
 alias grepc='grep --color=always'
 
