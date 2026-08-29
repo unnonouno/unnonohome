@@ -251,3 +251,15 @@ if [ -f $HOME/google-cloud-sdk/path.zsh.inc ]; then . $HOME/google-cloud-sdk/pat
 # The next line enables shell command completion for gcloud.
 if [ -f $HOME/google-cloud-sdk/completion.zsh.inc ]; then . $HOME/google-cloud-sdk/completion.zsh.inc; fi
 
+#if [ -s $HOME/.rye/env ]; then
+#    source "$HOME/.rye/env"
+#fi
+
+if [ which op > /dev/null 2>&1 ]; then
+    eval "$(op completion zsh)"; compdef _op op
+fi
+
+if [ which uv > /dev/null 2>&1 ]; then
+    eval "$(uv generate-shell-completion zsh)"
+fi
+
