@@ -239,3 +239,8 @@ fi
 if [ -f $HOME/Android ]; then
     export PATH="$HOME/Android/Sdk/platform-tools:$PATH"
 fi
+
+# npm
+if command -v npm >/dev/null 2>&1; then
+    export PATH=$PATH:`npm prefix --location=global`/bin
+fi
