@@ -231,3 +231,7 @@ if [ -s $HOME/.anyenv ]; then
   export PATH="$HOME/.anyenv/bin:$PATH"
   eval "$(anyenv init -)"
 fi
+
+if [ -s $HOME/.local ]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
