@@ -235,3 +235,7 @@ fi
 if [ -s $HOME/.local ]; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
+
+if [ -f $HOME/Android ]; then
+    export PATH="$HOME/Android/Sdk/platform-tools:$PATH"
+fi
