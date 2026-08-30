@@ -7,6 +7,25 @@ autoload -U zargs
 EDITOR=vi
 PAGER='lv -c'
 
+# Keep PATH entries unique, and add only directories that exist.
+typeset -U path PATH
+path_prepend() {
+  local dir
+  local -a dirs
+  for dir in "$@"; do
+    [[ -d "$dir" ]] && dirs+=("$dir")
+  done
+  path=($dirs $path)
+}
+path_append() {
+  local dir
+  local -a dirs
+  for dir in "$@"; do
+    [[ -d "$dir" ]] && dirs+=("$dir")
+  done
+  path=($path $dirs)
+}
+
 # history
 HISTFILE="$HOME/.zhistory"
 HISTSIZE=10000
@@ -114,54 +133,54 @@ alias grepc='grep --color=always'
 alias dif='(){diff -y -W `tput cols` --color=always $* | lv -c}'
 
 export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
-export PATH=$HOME/bin:$HOME/Library/Haskell/bin:/usr/texbin:/usr/local/bin:$PATH
+path_prepend "$HOME/bin" "$HOME/Library/Haskell/bin" "/usr/texbin" "/usr/local/bin"
 
 # for c/c++
 export INCLUDE_PATH=$HOME/include:/usr/local/include:$INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$INCLUDE_PATH
 export C_INCLUDE_PATH=$INCLUDE_PATH
-if [ -d /opt/local/lib ]; then
-    export LIBRARY_PATH=/opt/local/lib:$LIBRARY_PATH
-    export LD_LIBRARY_PATH=/opt/local/lib:$LD_LIBRARY_PATH
+if [[ -d "/opt/local/lib" ]]; then
+    export LIBRARY_PATH="/opt/local/lib:${LIBRARY_PATH:-}"
+    export LD_LIBRARY_PATH="/opt/local/lib:${LD_LIBRARY_PATH:-}"
 fi
-export LIBRARY_PATH=$HOME/lib:/usr/local/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$HOME/lib:/usr/local/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH="$HOME/lib:/usr/local/lib:${LIBRARY_PATH:-}"
+export LD_LIBRARY_PATH="$HOME/lib:/usr/local/lib:${LD_LIBRARY_PATH:-}"
 
-export PATH=$HOME/bin:/usr/local/bin:/opt/local/bin:$PATH
+path_prepend "$HOME/bin" "/usr/local/bin" "/opt/local/bin"
 
 # for gtest
 export GTEST_COLOR=yes
 
 # for godi
-if [ -d $HOME/godi ]; then
-    export PATH=$HOME/godi/bin:$HOME/godi/sbin:$PATH
-    export MANPATH=$HOME/godi/man:$MANPATH
+if [[ -d "$HOME/godi" ]]; then
+    path_prepend "$HOME/godi/bin" "$HOME/godi/sbin"
+    export MANPATH="$HOME/godi/man:${MANPATH:-}"
 fi
 
 # OPAM configuration
-if [ -d $HOME/.opam ]; then
+if [[ -d "$HOME/.opam" ]]; then
   . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 fi
 
 # rbenv
-if [ -d $HOME/.rbenv ]; then
-    export RBENV_ROOT=$HOME/.rbenv
-    export PATH=$RBENV_ROOT/bin:${PATH}
+if [[ -d "$HOME/.rbenv" ]]; then
+    export RBENV_ROOT="$HOME/.rbenv"
+    path_prepend "$RBENV_ROOT/bin"
     eval "$(rbenv init - zsh)"
 fi
 
 # pyenv
-if [ -d $HOME/.pyenv ]; then
-    export PYENV_ROOT=$HOME/.pyenv
-    export PATH=$PYENV_ROOT/bin:${PATH}
+if [[ -d "$HOME/.pyenv" ]]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    path_prepend "$PYENV_ROOT/bin"
     eval "$(pyenv init -)"
-    if [ -d $HOME/.pyenv/plugins/pyenv-virtualenv ]; then
+    if [[ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]]; then
         eval "$(pyenv virtualenv-init -)"
     fi
 fi
 
 # cudnnenv
-if [ -d $HOME/.cudnn ]; then
+if [[ -d "$HOME/.cudnn" ]]; then
   export CFLAGS="-I$HOME/.cudnn/active/cuda/include $CFLAGS"
   export LDFLAGS="-L$HOME/.cudnn/active/cuda/lib64 $LDFLAGS"
   export LD_LIBRARY_PATH=$HOME/.cudnn/active/cuda/lib64:$LD_LIBRARY_PATH
@@ -173,12 +192,10 @@ fi
 # export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 # Cargo
-if [ -d $HOME/.cargo/bin ]; then
-    export PATH=$HOME/.cargo/bin:$PATH
-fi
+path_prepend "$HOME/.cargo/bin"
 
 # CUDA
-if [ -d /usr/local/cuda ]; then
+if [[ -d "/usr/local/cuda" ]]; then
     export CUDA_HOME=/usr/local/cuda
 fi
 if [ $CUDA_HOME ]; then
@@ -188,22 +205,20 @@ fi
 
 # torch
 TORCH_HOME=$HOME/torch/install
-if [ -d $TORCH_HOME ]; then
-  export PATH=$TORCH_HOME/bin:$PATH
-  export LD_LIBRARY_PATH=$TORCH_HOME/lib:$LD_LIBRARY_PATH
-  export DYLD_LIBRARY_PATH=$TORCH_HOME/lib:$DYLD_LIBRARY_PATH
+if [[ -d "$TORCH_HOME" ]]; then
+  path_prepend "$TORCH_HOME/bin"
+  export LD_LIBRARY_PATH="$TORCH_HOME/lib:${LD_LIBRARY_PATH:-}"
+  export DYLD_LIBRARY_PATH="$TORCH_HOME/lib:${DYLD_LIBRARY_PATH:-}"
 fi
 
 # mkl
 MKL_HOME=/opt/intel/mkl
-if [ -d $MKL_HOME ]; then
-  export LD_LIBRARY_PATH=$MKL_HOME/lib/intel64:$LD_LIBRARY_PATH
+if [[ -d "$MKL_HOME" ]]; then
+  export LD_LIBRARY_PATH="$MKL_HOME/lib/intel64:${LD_LIBRARY_PATH:-}"
 fi
 
 # ccache
-if [ -d /usr/lib/ccache ]; then
-  export PATH=/usr/lib/ccache:$PATH
-fi
+path_prepend "/usr/lib/ccache"
 
 # direnv
 if type direnv > /dev/null 2>&1; then
@@ -229,22 +244,18 @@ if [ -s $HOME/.xkb/keymap/mykbd ]; then
 fi
 
 # anyenv
-if [ -s $HOME/.anyenv ]; then
-  export PATH="$HOME/.anyenv/bin:$PATH"
+if [[ -d "$HOME/.anyenv" ]]; then
+  path_prepend "$HOME/.anyenv/bin"
   eval "$(anyenv init -)"
 fi
 
-if [ -s $HOME/.local ]; then
-  export PATH="$HOME/.local/bin:$PATH"
-fi
+path_prepend "$HOME/.local/bin"
 
-if [ -f $HOME/Android ]; then
-    export PATH="$HOME/Android/Sdk/platform-tools:$PATH"
-fi
+path_prepend "$HOME/Android/Sdk/platform-tools"
 
 # npm
 if command -v npm >/dev/null 2>&1; then
-    export PATH=$PATH:`npm prefix --location=global`/bin
+    path_append "$(npm prefix --location=global)/bin"
 fi
 
 # The next line updates PATH for the Google Cloud SDK.
@@ -268,8 +279,5 @@ fi
 
 # pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+path_prepend "$PNPM_HOME"
 # pnpm end
