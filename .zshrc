@@ -5,6 +5,11 @@ autoload -U compinit; compinit -i
 autoload -U history-search-end
 autoload -U zargs
 
+# Completion behavior
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+[[ -n "${LS_COLORS:-}" ]] && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
 # Environment
 export EDITOR=vi
 if command -v lv >/dev/null 2>&1; then
@@ -63,6 +68,10 @@ setopt share_history
 setopt prompt_subst
 setopt ignore_eof
 setopt complete_aliases
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushd_silent
 unsetopt promptcr
 
 zle -N history-beginning-search-backward-end history-search-end
