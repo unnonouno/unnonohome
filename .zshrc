@@ -1,13 +1,19 @@
+# Basic editing and completion
 bindkey -e
-autoload -U compinit; compinit -u
 autoload -U colors; colors
+autoload -U compinit; compinit -u
+autoload -U history-search-end
 autoload -U zargs
 
-# env
-EDITOR=vi
-PAGER='lv -c'
+# Environment
+export EDITOR=vi
+if command -v lv >/dev/null 2>&1; then
+  export PAGER='lv -c'
+else
+  export PAGER='less -R'
+fi
 
-# Keep PATH entries unique, and add only directories that exist.
+# Keep PATH entries unique, and add only paths that exist.
 typeset -U path PATH
 path_prepend() {
   local dir
@@ -25,259 +31,243 @@ path_append() {
   done
   path=($path $dirs)
 }
+path_prepend "$HOME/bin" "/usr/local/bin" "/opt/local/bin" "$HOME/Library/Haskell/bin" "/usr/texbin"
 
-# history
+# History
 HISTFILE="$HOME/.zhistory"
 HISTSIZE=10000
 SAVEHIST=10000
-
-# option, limit, bindkey
 setopt hist_ignore_all_dups
 setopt share_history
 
-autoload -U history-search-end
+# Shell behavior and key bindings
+setopt prompt_subst
+setopt ignore_eof
+setopt complete_aliases
+unsetopt promptcr
+
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end  history-search-end
 bindkey '^N' history-beginning-search-forward-end
 bindkey '^P' history-beginning-search-backward-end
 
-setopt prompt_subst
-setopt ignore_eof
+# OS-specific aliases
+case "$(uname)" in
+  Darwin)
+    alias ls='ls -G'
+    alias la='ls -aG'
+    alias ll='ls -alhG'
+    ;;
+  Linux)
+    alias ls='ls --color'
+    alias la='ls -a --color'
+    alias ll='ls -alh --color'
+    alias pbcopy='xsel --clipboard --input'
+    alias open='xdg-open'
+    ;;
+esac
 
-#PSCOLOR='00;04;32'      # 細字;下線;緑
-#RPROMPT=$'%{\e[${PSCOLOR}m%}[%~]%{\e[00m%}' # 右プロンプト
-#PS1="$ "
+# Prompt
+_hash_prefix() {
+  if command -v md5sum >/dev/null 2>&1; then
+    print -r -- "$1" | md5sum | cut -b 1-7
+  elif command -v md5 >/dev/null 2>&1; then
+    print -r -- "$1" | md5 -q | cut -b 1-7
+  else
+    print -r -- '0000000'
+  fi
+}
 
-if [ `uname` = Darwin ]; then
-  alias ls="ls -G"
-  alias la="ls -aG"
-  alias ll="ls -alhG"
-else
-  alias ls="ls --color"
-  alias la="ls -a --color"
-  alias ll="ls -alh --color"
-fi
-
-if [ `uname` = Linux ]; then
-    alias pbcopy="xsel --clipboard --input"
-    alias open="xdg-open"
-fi
-
-#if [ $TERM = "cygwin" ]; then 
-PROMPT='%{'$'\e[1;32m%}$USER@%m %{'$'\e[1;30m%} %~%{'$'\e[m%}\n%# '
-#PS1=$'%{\e]2; %~ \a'$'$fg[green]%~%{'$'\e[m%} \n%# '
-
-# foreground color
-local N=$[0x`hostname | md5sum | cut -b-7`%6]
-local R=$[0x`echo "$HOST"r | md5sum | cut -b-7`%192 + 64]
-local G=$[0x`echo "$HOST"g | md5sum | cut -b-7`%192 + 64]
-local B=$[0x`echo "$HOST"b | md5sum | cut -b-7`%192 + 64]
-#local COL=$'%{\e[0;$[31+N]m%}'
+local R=$(( 0x$(_hash_prefix "${HOST}r") % 192 + 64 ))
+local G=$(( 0x$(_hash_prefix "${HOST}g") % 192 + 64 ))
+local B=$(( 0x$(_hash_prefix "${HOST}b") % 192 + 64 ))
 local COL=$'%{\e[0;38;2;'$R';'$G';'$B'm%}'
-local GREEN=$'%{\e[0;32m%}'
-local BLUE=$'%{\e[0;34m%}'
-local MAGENTA=$'%{\e[0;35m%}'
-local CYAN=$'%{\e[0;36m%}'
 local DEFAULT=$'%{\e[1;m%}'
 PS1=$COL$'$HOST:%~'$DEFAULT$'\n%# '
-#RPROMPT='[%D{%H:%M on %a}]'
 
-#fi
-
-unsetopt promptcr
-
-#PROMPT="%U$USER@%m %#%u "
-#RPROMPT="%~"
-
-if [ "$TERM" = "screen" ]; then
+# Show a short title in screen/tmux-compatible terminals that report TERM=screen.
+if [[ "$TERM" = screen ]]; then
   PROMPT=$'\033k%(4~,%-1~/.../%2~,%~)\033\134'$PROMPT
 
   preexec() {
-    local -a cmd; cmd=(${(z)1})
+    local -a cmd
+    cmd=(${(z)1})
     echo -n $'\033k'$cmd[1]$'\033\134'
   }
 fi
 
+# Global aliases
 alias -g G='| grep '
 alias -g L='| less '
 alias -g H='| head '
 alias -g T='| tail '
 alias -g V='| vi '
 alias -g N='| nkf -s'
-
 alias -g C=' | /usr/local/bin/clip '
 alias -g P=' < /dev/clipboard '
 
 alias clean='rm *~'
 
-# lv
-if [ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
+# Pager helpers
+page() {
+  ${=PAGER}
+}
+
+# source-highlight through the selected pager.
+SRC_HIGHLIGHT=''
+if [[ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]]; then
   SRC_HIGHLIGHT=/usr/share/source-highlight/src-hilite-lesspipe.sh
-fi
-if [ -f /usr/local/bin/src-hilite-lesspipe.sh ]; then
+elif [[ -f /usr/local/bin/src-hilite-lesspipe.sh ]]; then
   SRC_HIGHLIGHT=/usr/local/bin/src-hilite-lesspipe.sh
 fi
-if [ $SRC_HIGHLIGHT ]; then
-  function lc() { if [ -f $1 ]; then $SRC_HIGHLIGHT $1 | lv -c; fi; }
+if [[ -n "$SRC_HIGHLIGHT" ]]; then
+  lc() {
+    [[ -f "$1" ]] && "$SRC_HIGHLIGHT" "$1" | page
+  }
 fi
 
-# jq
-function jql() { jq -C $* | lv -c }
+jql() {
+  jq -C "$@" | page
+}
 
-# grep
-#  bold and red
+# grep and diff
 export GREP_COLORS='mt=01;31'
 alias grep='grep --color=auto -s'
 alias grepc='grep --color=always'
 
-alias dif='(){diff -y -W `tput cols` --color=always $* | lv -c}'
+dif() {
+  diff -y -W "$(tput cols)" --color=always "$@" | page
+}
 
-export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
-path_prepend "$HOME/bin" "$HOME/Library/Haskell/bin" "/usr/texbin" "/usr/local/bin"
-
-# for c/c++
-export INCLUDE_PATH=$HOME/include:/usr/local/include:$INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=$INCLUDE_PATH
-export C_INCLUDE_PATH=$INCLUDE_PATH
-if [[ -d "/opt/local/lib" ]]; then
-    export LIBRARY_PATH="/opt/local/lib:${LIBRARY_PATH:-}"
-    export LD_LIBRARY_PATH="/opt/local/lib:${LD_LIBRARY_PATH:-}"
-fi
+# Build paths
+export PKG_CONFIG_PATH="$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
+export INCLUDE_PATH="$HOME/include:/usr/local/include:${INCLUDE_PATH:-}"
+export CPLUS_INCLUDE_PATH="$INCLUDE_PATH"
+export C_INCLUDE_PATH="$INCLUDE_PATH"
 export LIBRARY_PATH="$HOME/lib:/usr/local/lib:${LIBRARY_PATH:-}"
 export LD_LIBRARY_PATH="$HOME/lib:/usr/local/lib:${LD_LIBRARY_PATH:-}"
 
-path_prepend "$HOME/bin" "/usr/local/bin" "/opt/local/bin"
+if [[ -d /opt/local/lib ]]; then
+  export LIBRARY_PATH="/opt/local/lib:${LIBRARY_PATH:-}"
+  export LD_LIBRARY_PATH="/opt/local/lib:${LD_LIBRARY_PATH:-}"
+fi
 
-# for gtest
 export GTEST_COLOR=yes
 
-# for godi
+# OCaml / godi / opam
 if [[ -d "$HOME/godi" ]]; then
-    path_prepend "$HOME/godi/bin" "$HOME/godi/sbin"
-    export MANPATH="$HOME/godi/man:${MANPATH:-}"
+  path_prepend "$HOME/godi/bin" "$HOME/godi/sbin"
+  export MANPATH="$HOME/godi/man:${MANPATH:-}"
 fi
 
-# OPAM configuration
 if [[ -d "$HOME/.opam" ]]; then
-  . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+  source "$HOME/.opam/opam-init/init.zsh" >/dev/null 2>&1 || true
 fi
 
-# rbenv
+# Ruby
 if [[ -d "$HOME/.rbenv" ]]; then
-    export RBENV_ROOT="$HOME/.rbenv"
-    path_prepend "$RBENV_ROOT/bin"
-    eval "$(rbenv init - zsh)"
+  export RBENV_ROOT="$HOME/.rbenv"
+  path_prepend "$RBENV_ROOT/bin"
+  command -v rbenv >/dev/null 2>&1 && eval "$(rbenv init - zsh)"
 fi
 
-# pyenv
+# Python
 if [[ -d "$HOME/.pyenv" ]]; then
-    export PYENV_ROOT="$HOME/.pyenv"
-    path_prepend "$PYENV_ROOT/bin"
+  export PYENV_ROOT="$HOME/.pyenv"
+  path_prepend "$PYENV_ROOT/bin"
+  if command -v pyenv >/dev/null 2>&1; then
     eval "$(pyenv init -)"
     if [[ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]]; then
-        eval "$(pyenv virtualenv-init -)"
+      eval "$(pyenv virtualenv-init -)"
     fi
+  fi
 fi
 
-# cudnnenv
+# CUDA / cuDNN
 if [[ -d "$HOME/.cudnn" ]]; then
-  export CFLAGS="-I$HOME/.cudnn/active/cuda/include $CFLAGS"
-  export LDFLAGS="-L$HOME/.cudnn/active/cuda/lib64 $LDFLAGS"
-  export LD_LIBRARY_PATH=$HOME/.cudnn/active/cuda/lib64:$LD_LIBRARY_PATH
+  export CFLAGS="-I$HOME/.cudnn/active/cuda/include ${CFLAGS:-}"
+  export LDFLAGS="-L$HOME/.cudnn/active/cuda/lib64 ${LDFLAGS:-}"
+  export LD_LIBRARY_PATH="$HOME/.cudnn/active/cuda/lib64:${LD_LIBRARY_PATH:-}"
 fi
 
-# GO
-# export GOROOT=$HOME/go
-# export GOPATH=$HOME/dev/go
-# export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
-
-# Cargo
-path_prepend "$HOME/.cargo/bin"
-
-# CUDA
-if [[ -d "/usr/local/cuda" ]]; then
-    export CUDA_HOME=/usr/local/cuda
+if [[ -d /usr/local/cuda ]]; then
+  export CUDA_HOME=/usr/local/cuda
 fi
-if [ $CUDA_HOME ]; then
-  export PATH=${CUDA_HOME}/bin:$PATH
-  export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:$LD_LIBRARY_PATH
+if [[ -n "${CUDA_HOME:-}" ]]; then
+  path_prepend "$CUDA_HOME/bin"
+  export LD_LIBRARY_PATH="$CUDA_HOME/lib64:${LD_LIBRARY_PATH:-}"
 fi
 
-# torch
-TORCH_HOME=$HOME/torch/install
+# Torch / MKL
+TORCH_HOME="$HOME/torch/install"
 if [[ -d "$TORCH_HOME" ]]; then
   path_prepend "$TORCH_HOME/bin"
   export LD_LIBRARY_PATH="$TORCH_HOME/lib:${LD_LIBRARY_PATH:-}"
   export DYLD_LIBRARY_PATH="$TORCH_HOME/lib:${DYLD_LIBRARY_PATH:-}"
 fi
 
-# mkl
 MKL_HOME=/opt/intel/mkl
 if [[ -d "$MKL_HOME" ]]; then
   export LD_LIBRARY_PATH="$MKL_HOME/lib/intel64:${LD_LIBRARY_PATH:-}"
 fi
 
-# ccache
-path_prepend "/usr/lib/ccache"
+# Common toolchains
+path_prepend "$HOME/.cargo/bin" "/usr/lib/ccache" "$HOME/.local/bin" "$HOME/Android/Sdk/platform-tools"
+
+if [[ -d "$HOME/.anyenv" ]]; then
+  path_prepend "$HOME/.anyenv/bin"
+  command -v anyenv >/dev/null 2>&1 && eval "$(anyenv init -)"
+fi
+
+if command -v npm >/dev/null 2>&1; then
+  path_append "$(npm prefix --location=global)/bin"
+fi
+
+export PNPM_HOME="$HOME/.local/share/pnpm"
+path_prepend "$PNPM_HOME"
 
 # direnv
-if type direnv > /dev/null 2>&1; then
-    eval "$(direnv hook zsh)"
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
 fi
 
 # ssh-agent
 agent="$HOME/.ssh/agent"
-if [ -S "$SSH_AUTH_SOCK" ]; then
-    case $SSH_AUTH_SOCK in
-    /tmp/*/agent.[0-9]*)
-        ln -snf "$SSH_AUTH_SOCK" $agent && export SSH_AUTH_SOCK=$agent
-    esac
-elif [ -S $agent ]; then
-    export SSH_AUTH_SOCK=$agent
+if [[ -S "${SSH_AUTH_SOCK:-}" ]]; then
+  case "$SSH_AUTH_SOCK" in
+    /tmp/*/agent.<->)
+      ln -snf "$SSH_AUTH_SOCK" "$agent" && export SSH_AUTH_SOCK="$agent"
+      ;;
+  esac
+elif [[ -S "$agent" ]]; then
+  export SSH_AUTH_SOCK="$agent"
 else
-    echo "no ssh-agent"
+  echo "no ssh-agent"
 fi
 
-# xkb
-if [ -s $HOME/.xkb/keymap/mykbd ]; then
-  xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mykbd $DISPLAY 2> /dev/null
+# X keyboard map
+if [[ -n "${DISPLAY:-}" && -s "$HOME/.xkb/keymap/mykbd" ]]; then
+  xkbcomp -I"$HOME/.xkb" "$HOME/.xkb/keymap/mykbd" "$DISPLAY" 2>/dev/null
 fi
 
-# anyenv
-if [[ -d "$HOME/.anyenv" ]]; then
-  path_prepend "$HOME/.anyenv/bin"
-  eval "$(anyenv init -)"
+# Google Cloud SDK
+if [[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]]; then
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
+fi
+if [[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]]; then
+  source "$HOME/google-cloud-sdk/completion.zsh.inc"
 fi
 
-path_prepend "$HOME/.local/bin"
-
-path_prepend "$HOME/Android/Sdk/platform-tools"
-
-# npm
-if command -v npm >/dev/null 2>&1; then
-    path_append "$(npm prefix --location=global)/bin"
+# Command completions
+if command -v op >/dev/null 2>&1; then
+  eval "$(op completion zsh)"
+  compdef _op op
 fi
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f $HOME/google-cloud-sdk/path.zsh.inc ]; then . $HOME/google-cloud-sdk/path.zsh.inc; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f $HOME/google-cloud-sdk/completion.zsh.inc ]; then . $HOME/google-cloud-sdk/completion.zsh.inc; fi
-
-#if [ -s $HOME/.rye/env ]; then
-#    source "$HOME/.rye/env"
-#fi
-
-if [ which op > /dev/null 2>&1 ]; then
-    eval "$(op completion zsh)"; compdef _op op
+if command -v uv >/dev/null 2>&1; then
+  eval "$(uv generate-shell-completion zsh)"
 fi
 
-if [ which uv > /dev/null 2>&1 ]; then
-    eval "$(uv generate-shell-completion zsh)"
+if [[ -f "$HOME/.pf-completion.zsh" ]]; then
+  source "$HOME/.pf-completion.zsh"
 fi
-
-
-# pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
-path_prepend "$PNPM_HOME"
-# pnpm end
