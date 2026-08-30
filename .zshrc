@@ -1,7 +1,7 @@
 # Basic editing and completion
 bindkey -e
 autoload -U colors; colors
-autoload -U compinit; compinit -u
+autoload -U compinit; compinit -i
 autoload -U history-search-end
 autoload -U zargs
 
@@ -30,6 +30,20 @@ path_append() {
     [[ -d "$dir" ]] && dirs+=("$dir")
   done
   path=($path $dirs)
+}
+pathvar_prepend() {
+  local var=$1
+  shift
+  local dir entry
+  local -a dirs current unique
+  for dir in "$@"; do
+    [[ -d "$dir" ]] && dirs+=("$dir")
+  done
+  current=("${(@ps.:.)${(P)var}}")
+  for entry in "${dirs[@]}" "${current[@]}"; do
+    [[ -n "$entry" && ${unique[(Ie)$entry]} -eq 0 ]] && unique+=("$entry")
+  done
+  export "$var=${(j.:.)unique}"
 }
 path_prepend "$HOME/bin" "/usr/local/bin" "/opt/local/bin" "$HOME/Library/Haskell/bin" "/usr/texbin"
 
@@ -144,13 +158,10 @@ export PKG_CONFIG_PATH="$HOME/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pk
 export INCLUDE_PATH="$HOME/include:/usr/local/include:${INCLUDE_PATH:-}"
 export CPLUS_INCLUDE_PATH="$INCLUDE_PATH"
 export C_INCLUDE_PATH="$INCLUDE_PATH"
-export LIBRARY_PATH="$HOME/lib:/usr/local/lib:${LIBRARY_PATH:-}"
-export LD_LIBRARY_PATH="$HOME/lib:/usr/local/lib:${LD_LIBRARY_PATH:-}"
-
-if [[ -d /opt/local/lib ]]; then
-  export LIBRARY_PATH="/opt/local/lib:${LIBRARY_PATH:-}"
-  export LD_LIBRARY_PATH="/opt/local/lib:${LD_LIBRARY_PATH:-}"
-fi
+pathvar_prepend LIBRARY_PATH "$HOME/lib" "/usr/local/lib"
+pathvar_prepend LD_LIBRARY_PATH "$HOME/lib" "/usr/local/lib"
+pathvar_prepend LIBRARY_PATH "/opt/local/lib"
+pathvar_prepend LD_LIBRARY_PATH "/opt/local/lib"
 
 export GTEST_COLOR=yes
 
@@ -187,7 +198,7 @@ fi
 if [[ -d "$HOME/.cudnn" ]]; then
   export CFLAGS="-I$HOME/.cudnn/active/cuda/include ${CFLAGS:-}"
   export LDFLAGS="-L$HOME/.cudnn/active/cuda/lib64 ${LDFLAGS:-}"
-  export LD_LIBRARY_PATH="$HOME/.cudnn/active/cuda/lib64:${LD_LIBRARY_PATH:-}"
+  pathvar_prepend LD_LIBRARY_PATH "$HOME/.cudnn/active/cuda/lib64"
 fi
 
 if [[ -d /usr/local/cuda ]]; then
@@ -195,20 +206,20 @@ if [[ -d /usr/local/cuda ]]; then
 fi
 if [[ -n "${CUDA_HOME:-}" ]]; then
   path_prepend "$CUDA_HOME/bin"
-  export LD_LIBRARY_PATH="$CUDA_HOME/lib64:${LD_LIBRARY_PATH:-}"
+  pathvar_prepend LD_LIBRARY_PATH "$CUDA_HOME/lib64"
 fi
 
 # Torch / MKL
 TORCH_HOME="$HOME/torch/install"
 if [[ -d "$TORCH_HOME" ]]; then
   path_prepend "$TORCH_HOME/bin"
-  export LD_LIBRARY_PATH="$TORCH_HOME/lib:${LD_LIBRARY_PATH:-}"
-  export DYLD_LIBRARY_PATH="$TORCH_HOME/lib:${DYLD_LIBRARY_PATH:-}"
+  pathvar_prepend LD_LIBRARY_PATH "$TORCH_HOME/lib"
+  pathvar_prepend DYLD_LIBRARY_PATH "$TORCH_HOME/lib"
 fi
 
 MKL_HOME=/opt/intel/mkl
 if [[ -d "$MKL_HOME" ]]; then
-  export LD_LIBRARY_PATH="$MKL_HOME/lib/intel64:${LD_LIBRARY_PATH:-}"
+  pathvar_prepend LD_LIBRARY_PATH "$MKL_HOME/lib/intel64"
 fi
 
 # Common toolchains
@@ -241,8 +252,6 @@ if [[ -S "${SSH_AUTH_SOCK:-}" ]]; then
   esac
 elif [[ -S "$agent" ]]; then
   export SSH_AUTH_SOCK="$agent"
-else
-  echo "no ssh-agent"
 fi
 
 # X keyboard map
